@@ -35,3 +35,27 @@ describe 'lhapp.Client', ->
             expected = "http://foobar.#{lhapp.BASE_URL}/projects.xml?_token=TOKEN&foo=bar&id=102"
             client.getUrl('projects', {format: 'xml', params: {foo: 'bar', id: 102}}).should.equal expected
 
+    describe '.getProjects', ->
+
+        it 'should call .get() with proper path', ->
+            path = null
+            options = null
+
+            client.get = (_path, _options) ->
+                path = _path
+                options = _options
+
+            client.getProjects()
+            path.should.equal 'projects'
+
+        it 'should call callback for array of projects', ->
+            client.request = (url, callback) ->
+                callback('err', 'res', {projects: [{project: 1}, {project: 2}]})
+
+            called = []
+            client.getProjects (projects) ->
+                for project in projects
+                    called.push project
+
+            called.should.deep.equal [1, 2]
+
