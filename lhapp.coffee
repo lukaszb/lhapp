@@ -45,6 +45,10 @@ class Client
             callback(data.project)
         }
 
+    getChangesets: (id, callback) ->
+        @get "projects/#{id}/changesets", {callback: (err, res, data) ->
+            callback(_.map(data.changesets, (c) -> c.changeset))
+        }
 
 
 exports.BASE_URL = BASE_URL

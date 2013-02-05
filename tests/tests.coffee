@@ -86,3 +86,24 @@ describe 'lhapp.Client', ->
             calls[0][1].callback('err', 'res', {project: {}})
             callbackCallsCount.should.equal 1
 
+    describe '.getChangesets', ->
+
+        it 'should call .get() with proper path', ->
+            path = null
+
+            client.get = (_path, _options) -> path = _path
+
+            client.getChangesets(101)
+            path.should.equal 'projects/101/changesets'
+
+        it 'should call callback for array of projects', ->
+            client.request = (url, callback) ->
+                callback('err', 'res', {changesets: [{changeset: 1}, {changeset: 2}]})
+
+            called = []
+            client.getChangesets 101, (changesets) ->
+                for changeset in changesets
+                    called.push changeset
+
+            called.should.deep.equal [1, 2]
+
