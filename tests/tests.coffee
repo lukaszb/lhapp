@@ -35,6 +35,17 @@ describe 'lhapp.Client', ->
             expected = "http://foobar.#{lhapp.BASE_URL}/projects.xml?_token=TOKEN&foo=bar&id=102"
             client.getUrl('projects', {format: 'xml', params: {foo: 'bar', id: 102}}).should.equal expected
 
+    describe '.get', ->
+
+        it 'should call request with proper parameters', ->
+            calls = []
+            client.request = (_url, _callback) -> calls.push [_url, _callback]
+            client.getCallback = () -> 'aCallback'
+            client.getUrl = (path) -> return path
+
+            client.get 'foobar', {callback: () ->}
+            calls.should.deep.equal [['foobar', 'aCallback']]
+
     describe '.getProjects', ->
 
         it 'should call .get() with proper path', ->
@@ -58,4 +69,20 @@ describe 'lhapp.Client', ->
                     called.push project
 
             called.should.deep.equal [1, 2]
+
+    describe '.getProject', ->
+
+        it 'should call .get() with proper url/callback', ->
+            calls = []
+            client.get = (_path, _options) -> calls.push [_path, _options]
+
+            callbackCallsCount = 0
+            callback = () -> callbackCallsCount += 1
+            client.getProject(1007, callback)
+            calls.length.should.equal 1
+            calls[0][0].should.equal 'projects/1007'
+
+            callbackCallsCount.should.equal 0
+            calls[0][1].callback('err', 'res', {project: {}})
+            callbackCallsCount.should.equal 1
 

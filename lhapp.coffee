@@ -23,29 +23,28 @@ class Client
             query = "&#{query}"
         return "http://#{@name}.#{BASE_URL}/#{path}.#{options.format}?_token=#{@token}#{query}"
 
-    get: (path, options) ->
-        options = getOptions(options)
-        url = @getUrl path, options
-
-        callback = (response) ->
-            data = ''
-            response.on 'data', (chunk) -> data += chunk
-            response.on 'end', ->
-                response.content = JSON.parse data
-                options.callback(response)
-
-        callback = (err, res, body) ->
+    getCallback: (options) ->
+        return (err, res, body) ->
             if not err
                 body = JSON.parse(body)
             options.callback(err, res, body)
 
+    get: (path, options) ->
+        options = getOptions(options)
+        url = @getUrl path, options
+        callback = @getCallback(options)
         @request url, callback
 
-
     getProjects: (callback) ->
-        @.get 'projects', {callback: (err, res, data) ->
+        @get 'projects', {callback: (err, res, data) ->
             callback(_.map(data.projects, (p) -> p.project))
         }
+
+    getProject: (id, callback) ->
+        @get "projects/#{id}", {callback: (err, res, data) ->
+            callback(data.project)
+        }
+
 
 
 exports.BASE_URL = BASE_URL
