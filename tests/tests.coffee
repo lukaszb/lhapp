@@ -174,4 +174,21 @@ describe 'lhapp.Client', ->
 
             called.should.deep.equal ['a', 'b']
 
-            
+    describe ".getMilestone", ->
+
+        it 'should call .get() with proper path', ->
+            path = null
+            client.get = (_path, _options) -> path = _path
+            client.getMilestone 102, 19
+            path.should.equal 'projects/102/milestones/19'
+
+        it 'should call callback with proper data', ->
+            calls = []
+            client.request = (url, callback) ->
+                callback 'err', 'res', {milestone: 'foobar'}
+            client.getMilestone 102, 32, (milestone) ->
+                calls.push milestone
+
+            calls.should.deep.equal ['foobar']
+
+ 

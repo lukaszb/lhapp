@@ -71,6 +71,11 @@ class Client
             callback(_.map(data.milestones, (m) -> m.milestone))
         }
 
+    getMilestone: (id, milestoneId, callback) ->
+        @get "projects/#{id}/milestones/#{milestoneId}", {callback: (err, res, data) ->
+            callback(data.milestone)
+        }
+
 
 exports.BASE_URL = BASE_URL
 exports.Client = Client
