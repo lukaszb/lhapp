@@ -133,3 +133,21 @@ describe 'lhapp.Client', ->
 
             called.should.deep.equal ['a', 'b']
 
+
+    describe ".getTicket", ->
+
+        it 'should call .get() with proper path', ->
+            path = null
+            client.get = (_path, _options) -> path = _path
+            client.getTicket 102, 19
+            path.should.equal 'projects/102/tickets/19'
+
+        it 'should call callback with proper data', ->
+            calls = []
+            client.request = (url, callback) ->
+                callback 'err', 'res', {ticket: 'foobar'}
+            client.getTicket 102, 32, (ticket) ->
+                calls.push ticket
+
+            calls.should.deep.equal ['foobar']
+

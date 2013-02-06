@@ -61,6 +61,11 @@ class Client
             "params": params
         }
 
+    getTicket: (id, number, callback) ->
+        @get "projects/#{id}/tickets/#{number}", {callback: (err, res, data) ->
+            callback(data.ticket)
+        }
+
 
 exports.BASE_URL = BASE_URL
 exports.Client = Client
