@@ -81,6 +81,12 @@ class Client
             callback(data.user)
         }
 
+    getUser: (id, callback) ->
+        @get "users/#{id}", {callback: (err, res, data) ->
+            callback(data.user)
+        }
+
+
 exports.BASE_URL = BASE_URL
 exports.Client = Client
 
