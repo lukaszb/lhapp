@@ -50,6 +50,17 @@ class Client
             callback(_.map(data.changesets, (c) -> c.changeset))
         }
 
+    getTickets: (id, callback, limit=30, page=1, query='') ->
+        params = {"limit": limit, "page": page}
+        if query
+            params.q = query
+
+        @get "projects/#{id}/tickets", {
+            callback: (err, res, data) ->
+                callback(_.map(data.tickets, (t) -> t.ticket))
+            "params": params
+        }
+
 
 exports.BASE_URL = BASE_URL
 exports.Client = Client

@@ -96,7 +96,7 @@ describe 'lhapp.Client', ->
             client.getChangesets(101)
             path.should.equal 'projects/101/changesets'
 
-        it 'should call callback for array of projects', ->
+        it 'should call callback for array of changesets', ->
             client.request = (url, callback) ->
                 callback('err', 'res', {changesets: [{changeset: 1}, {changeset: 2}]})
 
@@ -106,4 +106,30 @@ describe 'lhapp.Client', ->
                     called.push changeset
 
             called.should.deep.equal [1, 2]
+
+    describe '.getTickets', ->
+
+        it 'should call .get() with proper path/options', ->
+            path = null
+            options = null
+
+            client.get = (_path, _options) ->
+                path = _path
+                options = _options
+
+            callback = () ->
+            client.getTickets(101, callback, limit=50, page=3, query='state:open')
+            path.should.equal 'projects/101/tickets'
+            options.params.should.deep.equal {limit: 50, page: 3, q: 'state:open'}
+
+        it 'should call callback for array of tickets', ->
+            client.request = (url, callback) ->
+                callback('err', 'res', {tickets: [{ticket: 'a'}, {ticket: 'b'}]})
+
+            called = []
+            client.getTickets 101, (tickets) ->
+                for ticket in tickets
+                    called.push ticket
+
+            called.should.deep.equal ['a', 'b']
 
