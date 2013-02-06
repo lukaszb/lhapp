@@ -133,7 +133,6 @@ describe 'lhapp.Client', ->
 
             called.should.deep.equal ['a', 'b']
 
-
     describe ".getTicket", ->
 
         it 'should call .get() with proper path', ->
@@ -151,3 +150,28 @@ describe 'lhapp.Client', ->
 
             calls.should.deep.equal ['foobar']
 
+    describe '.getMilestones', ->
+
+        it 'should call .get() with proper path', ->
+            path = null
+            options = null
+
+            client.get = (_path, _options) ->
+                path = _path
+                options = _options
+
+            client.getMilestones 101, () ->
+            path.should.equal 'projects/101/milestones'
+
+        it 'should call callback for array of milestones', ->
+            client.request = (url, callback) ->
+                callback('err', 'res', {milestones: [{milestone: 'a'}, {milestone: 'b'}]})
+
+            called = []
+            client.getMilestones 101, (milestones) ->
+                for milestone in milestones
+                    called.push milestone
+
+            called.should.deep.equal ['a', 'b']
+
+            

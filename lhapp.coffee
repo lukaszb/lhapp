@@ -66,6 +66,11 @@ class Client
             callback(data.ticket)
         }
 
+    getMilestones: (id, callback) ->
+        @get "projects/#{id}/milestones", {callback: (err, res, data) ->
+            callback(_.map(data.milestones, (m) -> m.milestone))
+        }
+
 
 exports.BASE_URL = BASE_URL
 exports.Client = Client
