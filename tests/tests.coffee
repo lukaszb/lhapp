@@ -191,4 +191,21 @@ describe 'lhapp.Client', ->
 
             calls.should.deep.equal ['foobar']
 
+    describe ".getProfile", ->
+
+        it 'should call .get() with proper path', ->
+            path = null
+            client.get = (_path, _options) -> path = _path
+            client.getProfile()
+            path.should.equal 'profile'
+
+        it 'should call callback with proper data', ->
+            calls = []
+            client.request = (url, callback) ->
+                callback 'err', 'res', {user: 'foobar'}
+            client.getProfile (user) ->
+                calls.push user
+
+            calls.should.deep.equal ['foobar']
+
  

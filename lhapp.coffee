@@ -76,6 +76,10 @@ class Client
             callback(data.milestone)
         }
 
+    getProfile: (callback) ->
+        @get "profile", {callback: (err, res, data) ->
+            callback(data.user)
+        }
 
 exports.BASE_URL = BASE_URL
 exports.Client = Client
