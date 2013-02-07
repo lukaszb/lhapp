@@ -3,7 +3,7 @@
   "description":  "Client for Lighthouse App API",
   "keywords":     "lighthouse lighthouseapp api client",
   "author":       "Lukasz Balcerzak",
-  "version":      "0.8.0",
+  "version":      "0.8.1",
   "licenses":     [{
     "type":       "MIT",
     "url":        "https://github.com/lukaszb/lhapp/raw/master/LICENSE"

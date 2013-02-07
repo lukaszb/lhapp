@@ -1,5 +1,4 @@
 request = require 'request'
-_ = require 'underscore'
 
 BASE_URL = "lighthouseapp.com"
 
@@ -37,7 +36,7 @@ class Client
 
     getProjects: (callback) ->
         @get 'projects', {callback: (err, res, data) ->
-            callback(_.map(data.projects, (p) -> p.project))
+            callback((p.project for p in data.projects))
         }
 
     getProject: (id, callback) ->
@@ -47,7 +46,7 @@ class Client
 
     getChangesets: (id, callback) ->
         @get "projects/#{id}/changesets", {callback: (err, res, data) ->
-            callback(_.map(data.changesets, (c) -> c.changeset))
+            callback((c.changeset for c in data.changesets))
         }
 
     getTickets: (id, callback, limit=30, page=1, query='') ->
@@ -57,7 +56,7 @@ class Client
 
         @get "projects/#{id}/tickets", {
             callback: (err, res, data) ->
-                callback(_.map(data.tickets, (t) -> t.ticket))
+                callback((t.ticket for t in data.tickets))
             "params": params
         }
 
@@ -68,7 +67,7 @@ class Client
 
     getMilestones: (id, callback) ->
         @get "projects/#{id}/milestones", {callback: (err, res, data) ->
-            callback(_.map(data.milestones, (m) -> m.milestone))
+            callback((m.milestone for m in data.milestones))
         }
 
     getMilestone: (id, milestoneId, callback) ->
